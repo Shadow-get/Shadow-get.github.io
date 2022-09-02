@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>我的第一篇博客文章 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="响应式原理vue响应式原理的实现核心主要是object.defineProperty，实现过程如下  首先判断传入的是否是没有被代理过的对象，如果是就循环遍历对象 调用defineProperty函数监听函数，在函数内部首先要递归判断子属性 通过Object.defineProperty的get,set对属性进行监听 对数组进行方法劫持：通过创建一个对象，在对象上重写数组的方法，实现原型链继承，使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的第一篇博客文章">
+<meta property="og:url" content="http://example.com/2022/09/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="响应式原理vue响应式原理的实现核心主要是object.defineProperty，实现过程如下  首先判断传入的是否是没有被代理过的对象，如果是就循环遍历对象 调用defineProperty函数监听函数，在函数内部首先要递归判断子属性 通过Object.defineProperty的get,set对属性进行监听 对数组进行方法劫持：通过创建一个对象，在对象上重写数组的方法，实现原型链继承，使">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/1458668/1646725438320-12e44a7b-c76f-47a4-acdf-b9a5c0b01c93.png">
+<meta property="article:published_time" content="2022-09-02T15:52:17.000Z">
+<meta property="article:modified_time" content="2022-09-02T16:23:38.885Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/1458668/1646725438320-12e44a7b-c76f-47a4-acdf-b9a5c0b01c93.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-我的第一篇博客文章" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/" class="article-date">
+  <time class="dt-published" datetime="2022-09-02T15:52:17.000Z" itemprop="datePublished">2022-09-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      我的第一篇博客文章
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="响应式原理"><a href="#响应式原理" class="headerlink" title="响应式原理"></a>响应式原理</h3><p>vue响应式原理的实现核心主要是object.defineProperty，实现过程如下</p>
+<ol>
+<li>首先判断传入的是否是没有被代理过的对象，如果是就循环遍历对象</li>
+<li>调用defineProperty函数监听函数，在函数内部首先要递归判断子属性</li>
+<li>通过Object.defineProperty的get,set对属性进行监听</li>
+<li>对数组进行方法劫持：通过创建一个对象，在对象上重写数组的方法，实现原型链继承，使用数组的方法时就可以触发重写的方法，监控到数组的变化</li>
+<li>缺点是没有监控数组的索引和长度</li>
+</ol>
+<h3 id="vue如何检测数组变化"><a href="#vue如何检测数组变化" class="headerlink" title="vue如何检测数组变化"></a>vue如何检测数组变化</h3><p>原型链继承</p>
+<p> var oldArrayPrototype &#x3D; Array.prototype; </p>
+<p>var arrayPrototype &#x3D; Object.create(oldArrayPrototype);</p>
+<h3 id="VUE的组件渲染流程"><a href="#VUE的组件渲染流程" class="headerlink" title="VUE的组件渲染流程"></a>VUE的组件渲染流程</h3><p>相关博客 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/ming1025/p/13091678.html">博客</a></p>
+<p>组件初始化会先创建组件的虚拟节点 Vue.extend\hook钩子 </p>
+<p>创建组件的真实节点 init方法 </p>
+<p>创建组件的实例</p>
+<p>拿到实例对应的$el 插入到父demo中</p>
+<h3 id="vue如何进行依赖收集"><a href="#vue如何进行依赖收集" class="headerlink" title="vue如何进行依赖收集"></a>vue如何进行依赖收集</h3><p>核心利用了观察者模式，实现了三个类</p>
+<ul>
+<li>Observer:辅助的可观测类，数组&#x2F;对象通过他的转化，可成为可观测数据</li>
+<li>Dep: 观察目标，每个数据都有个Dep类实例，内部有个subs队列，保存依赖本数据的观察者，当本数据变更时，调用dep.notyfy()通指观察者</li>
+<li>Watcher:观察者，进行观察者函数的包装处理，如render(）函数，会被包装成一个watcher实例</li>
+</ul>
+<p>每个组件都有一个渲染watcher,可以用来渲染页面，除了渲染watcher外还有计算属性watcher和用户watcher，取值的时候可以收集依赖（每个属性和对象都会收集当前的watcher），给对象和属性增加一个dep属性收集watcher,watcher和dep的关系是多对多，一个页面有多个属性，一个watcher对应多个dep,一个属性可以对应多个视图， 一个dep可以存多个watcher。</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904128028622861">observer，dep，watcher三者关系</a></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/1458668/1646725438320-12e44a7b-c76f-47a4-acdf-b9a5c0b01c93.png" alt="img"></p>
+<hr>
+<h3 id="vue模板编译原理"><a href="#vue模板编译原理" class="headerlink" title="vue模板编译原理"></a>vue模板编译原理</h3><ol>
+<li>模板编译，将模板代码转化为ast语法数</li>
+<li>优化AST，静态优化，优化不会变的内容，在后续做diff算法的时候可以跳过被标记成静态节点的元素</li>
+<li>生成代码，将AST对应的内容重新拼接成js代码</li>
+</ol>
+<h3 id="vue生命周期钩子如何实现"><a href="#vue生命周期钩子如何实现" class="headerlink" title="vue生命周期钩子如何实现"></a>vue生命周期钩子如何实现</h3><p>Vue的生命周期函数是回调函数，当创建组件实例时会调用对应的钩子方法</p>
+<p>内部会对钩子函数进行处理，将钩子函数维护成数组的形式</p>
+<p>当初始化的时候会将数组中每个钩子依次执行</p>
+<h3 id="Vue的生命周期方法有哪些，一般在哪一步发送请求及原因"><a href="#Vue的生命周期方法有哪些，一般在哪一步发送请求及原因" class="headerlink" title="Vue的生命周期方法有哪些，一般在哪一步发送请求及原因"></a>Vue的生命周期方法有哪些，一般在哪一步发送请求及原因</h3><ul>
+<li>beforeCreate 在实例初始化之后，数据观测(data observer) 和 event&#x2F;watcher 事件配置之前被调用。</li>
+<li>created 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch&#x2F;event 事件回调。这里没有$el</li>
+<li>beforeMount 在挂载开始之前被调用：相关的 render 函数首次被调用。</li>
+<li>mounted el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。</li>
+<li>beforeUpdate 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。</li>
+<li>updated 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。</li>
+<li>beforeDestroy 实例销毁之前调用。在这一步，实例仍然完全可用。</li>
+<li>destroyed Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。 该钩子在服务器端渲染期间不被调用。</li>
+<li>keep-alive (activated 和 deactivated)</li>
+</ul>
+<p>在哪发送请求都可以，主要看具体你要做什么事  但是一般我们发请求主要在两个方法 created, mounted?  请求操作都是异步的，可能在created会提前被发送，但是最后回来都是异步的。 如果在做vue服务端渲染的时候会有不同的选择，服务端渲染指的是在服务器中把我们的vue应用渲染成一个字符串，服务端没有浏览器，所以不能触发mounted方法，此时如果想统一我们可以把请求放在created上(在哪里发请求取决于干什么事)</p>
+<h3 id="Vue-mixin的使用场景和原理"><a href="#Vue-mixin的使用场景和原理" class="headerlink" title="Vue.mixin的使用场景和原理"></a>Vue.mixin的使用场景和原理</h3><ul>
+<li>Vue.mixin的作用就是抽离公共的业务逻辑，原理类似“对象的继承”，当组件初始化时会调用mergeOptions方法进行合并，采用策略模式针对不同的属性进行合并。如果混入的数据和本身组件中的数据冲突，会采用“就近原则”以组件的数据为准。</li>
+<li>mixin中有很多缺陷 “命名冲突问题”、”依赖问题”、”数据来源问题”</li>
+<li>Vue3 来说 就是compositionApi 组合式api  （组合由于继承） Vue3中依旧可以使用mixin</li>
+</ul>
+<h3 id="Vue组件data为什么必须是个函数"><a href="#Vue组件data为什么必须是个函数" class="headerlink" title="Vue组件data为什么必须是个函数"></a>Vue组件data为什么必须是个函数</h3><p>主要是为了让组件的数据保持独立，在使用组件的时候，是采用new同一个构造函数，如果构造中存的是一个对象数据源，所有的组件都会使用这个对象，为了解决这个问题我们需要把data定义成一个函数，这样每个组件在初始化的时候都可以生成一个全新的data</p>
+<h3 id="nextTick在哪里使用-原理"><a href="#nextTick在哪里使用-原理" class="headerlink" title="nextTick在哪里使用 原理"></a>nextTick在哪里使用 原理</h3><p>每次数据变化后回内部调用nextTick将更新操作延迟，将用户的操作延迟到页面更新之后。</p>
+<p>内部使用了批量处理的方式，将用户的回调和内部更新维护到了同一个队列中，然后开启了异步任务，批量执行代码 ，内部通过promise.then, mutationObserver,setImmediate,setTimeout 进行优雅降级操作，保证用户定义的逻辑在更新之后执行</p>
+<ul>
+<li>vue 多次更新数据，最终会进行批量处理的方式，将用户的回调和内部更新维护到了同一个队列中，然后开启了异步任务，批量执行代码 ，内部通过promise.then 或 setTimeout ，达到延迟效果从而获得更新后的DOM。</li>
+</ul>
+<hr>
+<h3 id="computed和watch区别"><a href="#computed和watch区别" class="headerlink" title="computed和watch区别"></a>computed和watch区别</h3><p>computed:</p>
+<p>使用原因主要是：在模版中放入太多声明式的逻辑会让模板本身过重，尤其当在页面中使用大量复杂的逻辑表达式处理数据时，会对页面的可维护性造成很大的影响</p>
+<p>原理：计算属性原理是Object.defineProperty,但是未来实现以来的值不发生变化就不更新计算属性的值，内部将计算属性包装成了watcher,并默认添加了lazy:true属性。当依赖改变的时候计算属性不会立即执行，当取值时才会执行，并有一个标识，dirty:true, 当dirty为true时，会重新进行计算，如果没有变化 dirty:fase，会采用上次的计算结果，如果依赖的值变化了会重新更新dirty值（类似防抖操作）</p>
+<p>watch:</p>
+<p>针对一个属性创建一个watcher,属性的值发生了变化，就调用用户对应的回调方法</p>
+<h3 id="Vue-set-方法的实现"><a href="#Vue-set-方法的实现" class="headerlink" title="Vue.set 方法的实现"></a>Vue.set 方法的实现</h3><p>使用原因：默认给响应式对象新增属性不会触发页面更新,为了实现新增得属性可以触发页面更新需要使用Vue.set方法。</p>
+<p>原理：</p>
+<ul>
+<li>我们给对象和数组本身都增加了dep属性</li>
+<li>当给对象新增不存在的属性则触发对象依赖的watcher去更新 </li>
+<li>当修改数组索引时我们调用数组本身的splice方法去更新数组</li>
+</ul>
+<p>vue.set(arr,4,111) &#x3D;&gt;arr.splice(4, 1, 111l)</p>
+<h3 id="Vue为什么需要虚拟DOM"><a href="#Vue为什么需要虚拟DOM" class="headerlink" title="Vue为什么需要虚拟DOM"></a>Vue为什么需要虚拟DOM</h3><p>vue会将模板编译成render函数，render函数返回的是虚拟DOM</p>
+<p>虚拟DOM就是用js对象来描述真的DOM，是对真实DOM得抽象</p>
+<p>由于直接操作DOM性能低但是js层得操作效率高，可以将DOM操作转化成对象操作，最终通过idff算法对比差异进行更新DOM</p>
+<p>虚拟DOM不依赖真实平台坏境，可以实现跨平台</p>
+<h3 id="Vue中diff算法原理"><a href="#Vue中diff算法原理" class="headerlink" title="Vue中diff算法原理"></a>Vue中diff算法原理</h3><p>Vue的diff算法是平级比较，主要是对比标签名和key属性</p>
+<p>内部采用深度递归+双指针的方式进行比较</p>
+<p>1.先比较是否是相同节点 key tag</p>
+<p>2.相同节点比较属性，并复用老节点</p>
+<p>3.比较儿子节点，考虑老节点和新节点儿子</p>
+<p>4.优化比较：头头 尾尾 头尾 尾头比较</p>
+<p>5.内部会采用双指针的方式进行对比操作（vue3采用的是最长递增子序列优化diff算法）</p>
+<h3 id="既然Vue通过数据劫持可以精准探测数据变化，为什么还需要虚拟DOM进行diff检测差异"><a href="#既然Vue通过数据劫持可以精准探测数据变化，为什么还需要虚拟DOM进行diff检测差异" class="headerlink" title="既然Vue通过数据劫持可以精准探测数据变化，为什么还需要虚拟DOM进行diff检测差异"></a>既然Vue通过数据劫持可以精准探测数据变化，为什么还需要虚拟DOM进行diff检测差异</h3><ul>
+<li>响应式数据变化，vue确实可以在数据发生变化的时候，响应式系统可以立刻得知。但是如果给每个属性都添加watcher用于更新，会产生大量的watcher从而降低性能。</li>
+<li>当每个属性都检测，对导致粒度过细不精准，所以vue采用组件级的watcher配合diff检测差异</li>
+</ul>
+<h3 id="请说明Vue中key的作用和原理，谈谈你对它的理解"><a href="#请说明Vue中key的作用和原理，谈谈你对它的理解" class="headerlink" title="请说明Vue中key的作用和原理，谈谈你对它的理解"></a>请说明Vue中key的作用和原理，谈谈你对它的理解</h3><p>vue通过key判断两个虚拟节点是否是相同节点，如果是相同节点，可以复用老节点</p>
+<p>没有key会导致更新的时候出问题</p>
+<h3 id="谈一谈对VUE组件化的理解"><a href="#谈一谈对VUE组件化的理解" class="headerlink" title="谈一谈对VUE组件化的理解"></a>谈一谈对VUE组件化的理解</h3><p>VUE组件化的目的。为了能实现组件化更新，每个组件都有一个watcher</p>
+<p>组件化开发能提高开发效率，复用性</p>
+<p>高内聚，低耦合，单向数据流</p>
+<h3 id="VUE的组件渲染流程-1"><a href="#VUE的组件渲染流程-1" class="headerlink" title="VUE的组件渲染流程"></a>VUE的组件渲染流程</h3><p>相关博客 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/ming1025/p/13091678.html">博客</a></p>
+<p>组件初始化会先创建组件的虚拟节点 Vue.extend\hook钩子 </p>
+<p>创建组件的真实节点 init方法 </p>
+<p>创建组件的实例</p>
+<p>拿到实例对应的$el 插入到父demo中</p>
+<h3 id="vue组件更新流程"><a href="#vue组件更新流程" class="headerlink" title="vue组件更新流程"></a>vue组件更新流程</h3><p>主要更新有三个地方：属性变化、事件变化、插槽变化</p>
+<p>因为属性是响应式得，属性在使用得时候会进行依赖收集，收集子组件得渲染watcher,属性变化会通知子组件重新渲染 （diff操作，调用组件得prepatch方法）</p>
+<p>父组件更新子组件不一定要更新  取决于子组件中得数据是否有变化，如果有变化才更新</p>
+<h3 id="vue中异步组件原理"><a href="#vue中异步组件原理" class="headerlink" title="vue中异步组件原理"></a>vue中异步组件原理</h3><p>原理同图片懒加载</p>
+<p>默认渲染组件如果发现组件得定义是一个函数，会先渲染一个 异步组件得占位符 &lt;!—&gt;</p>
+<p>在第一次渲染得时候 会把定义得函数进行解析，组件加载完毕后调用 forceUpdate强制更新</p>
+<p>核心靠 $forceRender(）强制更新组件+组件得重新渲染</p>
+<h3 id="函数式组件"><a href="#函数式组件" class="headerlink" title="函数式组件"></a>函数式组件</h3><p>函数组件得特点是: 无状态，无生命周期，无this。函数式组件是一个函数 不会产生watcher, 性能高</p>
+<p>没有new得过程 也没有init，prepatch</p>
+<h3 id="vue组件间传值得方式及区别"><a href="#vue组件间传值得方式及区别" class="headerlink" title="vue组件间传值得方式及区别"></a>vue组件间传值得方式及区别</h3><p>arrts和props中的区别</p>
+<p>两者相当于互斥，在props中声明过的就不会在attrs里面出现</p>
+<p>props原理(自定义属性原理)</p>
+<p>在模板编译得时候，会解析出带冒号得属性，把属性放入propsData中，在组件初始化时将propsData定义在实例组件上</p>
+<p>自定义方法原理</p>
+<p>父组件给子组件绑定得事件 收集放入_parentListeners中，然后将属性全部定在组件实例vm.$on(‘绑定事件’) 内部就是发布订阅模式</p>
+<p>$attr,$listeners原理</p>
+<p>在初始化渲染的时候 将父组件的DATA 和 方法 存放到 vm.$attrs 和vm.$listeners上</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">defineReactive(vm, &#x27;$attrs&#x27;, parentData &amp;&amp; parentData.attrs || emptyObject, null, true)</span><br><span class="line">defineReactive(vm, &#x27;$listeners&#x27;, options._parentListeners || emptyObject, null, true)</span><br></pre></td></tr></table></figure>
+
+<p>$parent $children原理</p>
+<p>在初始化生命周期时 给父实例的$children中push当前组件实例</p>
+<p>并增加$parent属性 指向父实例</p>
+<p>在使用的时候 通过封装一个函数 传入$parent+name方式使用</p>
+<p>provide inject原理</p>
+<p>父组件将数据挂载到_provide中，后代一直向上找通过属性查找_provide属性，找到后定义到自己身上</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">export function initLifecycle (vm: Component) &#123;</span><br><span class="line">  const options = vm.$options</span><br><span class="line">  // locate first non-abstract parent</span><br><span class="line">  let parent = options.parent</span><br><span class="line">  if (parent &amp;&amp; !options.abstract) &#123; // 排除抽象组件</span><br><span class="line">    while (parent.$options.abstract &amp;&amp; parent.$parent) &#123;</span><br><span class="line">      parent = parent.$parent</span><br><span class="line">    &#125;</span><br><span class="line">    parent.$children.push(vm) // 让父实例记住当前组件实例</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  vm.$parent = parent // 增加$parent属性 指向父实例</span><br><span class="line">  vm.$root = parent ? parent.$root : vm</span><br><span class="line">  // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ref原理</p>
+<p>ref 内部使用 vnode.componentInstance || vnode.elm </p>
+<p> 或者组件的真实节点 ，绑定到vm.$refs上面</p>
+<h3 id="attrs是为了解决什么问题出现的，provide和inject不能解决它能解决的问题吗"><a href="#attrs是为了解决什么问题出现的，provide和inject不能解决它能解决的问题吗" class="headerlink" title="$attrs是为了解决什么问题出现的，provide和inject不能解决它能解决的问题吗"></a>$attrs是为了解决什么问题出现的，provide和inject不能解决它能解决的问题吗</h3><p>v-bind&#x3D;”$attrs” v-on&#x3D;”$listeners”</p>
+<p>$attrs主要的作用就是实现批量传递数据，provide&#x2F;inject更适合应用在插件中，主要是实现跨级数据传递</p>
+<h3 id="v-if和v-for哪个优先级更高"><a href="#v-if和v-for哪个优先级更高" class="headerlink" title="v-if和v-for哪个优先级更高"></a>v-if和v-for哪个优先级更高</h3><p>v-for 的优先级更高  ，在源码中会先处理v-for然后在每个内部v-if判断</p>
+<p>如果需要同时使用 可以在外面用v-if包裹 或者写成计算属性的方式，先将要遍历的值通过计算属性筛选出来</p>
+<h3 id="v-model实现原理"><a href="#v-model实现原理" class="headerlink" title="v-model实现原理"></a>v-model实现原理</h3><p>1.用于表单元素（指令）</p>
+<p>会根据input表单中不同的type解析不同的事件，例如checkbox解析的是onChange事件  text解析的是input事件  对于v-model而言 内部会处理中文输入的问题 还可以在后面添加自定义的属性 如.lazy  自己写的value+input 不完全等价于v-model</p>
+<ol>
+<li>用于组件传值</li>
+</ol>
+<p>对于组件 v-model默认会被编译成value+input的格式  但是可以对model属性进行解析修改</p>
+<h3 id="Vue中slot是如何实现的？什么时候使用它？"><a href="#Vue中slot是如何实现的？什么时候使用它？" class="headerlink" title="Vue中slot是如何实现的？什么时候使用它？"></a>Vue中slot是如何实现的？什么时候使用它？</h3><p>原理： 普通插槽 ，渲染在父组件中 具名插槽只是做了名字的映射。  作用域插槽 通过回调函数 在子组件内部渲染  </p>
+<h3 id="Vue-use是干什么的，原理是什么"><a href="#Vue-use是干什么的，原理是什么" class="headerlink" title="Vue.use是干什么的，原理是什么"></a>Vue.use是干什么的，原理是什么</h3><p>Vue.use可以调用插件 核心是调用对应的install方法，有个巧妙的地方是将VUE构造函数当参数传入 实现了插件不依赖具体的vue版本</p>
+<h3 id="组件中写name选项有哪些好处及作用"><a href="#组件中写name选项有哪些好处及作用" class="headerlink" title="组件中写name选项有哪些好处及作用"></a>组件中写name选项有哪些好处及作用</h3><p>vue里面有一个递归组件，在创建子组件时，会将组件放到自己的Sub.options上  通过$options.name判断组件 </p>
+<p>在封装向上查找$parent函数上用到</p>
+<p>devtools里面可以根据name知道对应的组件</p>
+<p>keep-alive缓存的时候也可以指定名字缓存</p>
+<h3 id="vue中事件修饰符有哪些-实现原理是什么"><a href="#vue中事件修饰符有哪些-实现原理是什么" class="headerlink" title="vue中事件修饰符有哪些 实现原理是什么"></a>vue中事件修饰符有哪些 实现原理是什么</h3><p>事件修饰符 </p>
+<p>如 .stop .prevent  </p>
+<p> e.preventDefault e.stopPropagation</p>
+<p>对于 .once capture passive 做解析的时候 会创造映射表 实现对应的功能</p>
+<p>对于按键修饰符</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">keyup: function (event) &#123;</span><br><span class="line">   // 如果触发事件的元素不是事件绑定的元素</span><br><span class="line">   // 则返回</span><br><span class="line">   if (event.target !== event.currentTarget) return</span><br><span class="line">   // 如果按下去的不是 enter 键或者</span><br><span class="line">   // 没有同时按下 shift 键</span><br><span class="line">   // 则返回</span><br><span class="line">   if (!event.shiftKey || event.keyCode !== 13) return</span><br><span class="line">   // 阻止 事件冒泡</span><br><span class="line">   event.stopPropagation()</span><br><span class="line">   // 阻止该元素默认的 keyup 事件</span><br><span class="line">   event.preventDefault()</span><br><span class="line">   // ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如.passive 会使滚动更加流畅 当触摸屏幕的时候 就不会优先判断是不是阻止默认行为了</p>
+<h3 id="vue中-sync修饰符的作用-用法及实现原理"><a href="#vue中-sync修饰符的作用-用法及实现原理" class="headerlink" title="vue中.sync修饰符的作用 用法及实现原理"></a>vue中.sync修饰符的作用 用法及实现原理</h3><p>.sync 可以实现数据同步 相当于v-model  只不过 v-model只能解决一个数据同步的问题 多个数据同步的问题要使用.sync语法  </p>
+<p>内部是@update:属性名的语法糖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- .sync语法 --&gt;</span><br><span class="line">&lt;!-- 本来写法 @update:xx是固定写法--&gt;</span><br><span class="line">&lt;son3 :size=&quot;size&quot; @update:size=&quot;val=&gt; size = val&quot;&gt;&lt;/son3&gt;</span><br><span class="line">&lt;br&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">&lt;!-- .sync就是上面写法的语法糖 --&gt;</span><br><span class="line">&lt;son3 :size.sync=&quot;size&quot; &gt;&lt;/son3&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何理解自定义指令"><a href="#如何理解自定义指令" class="headerlink" title="如何理解自定义指令"></a>如何理解自定义指令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Vue.directive(&#x27;has&#x27;,function(el,bindings,vnode)&#123;</span><br><span class="line">  if(vnode.ctx.$store.state.xxxx ! === bindings.value)&#123;</span><br><span class="line">    el.parentNode.removeChild(el)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>定义指令默认的是bind和update ，在组件、dom初始化的时候会调用指令的钩子，create update等 内部调用同一个api 然后调用用户自己写的方法</p>
+<h3 id="keep-alive平时在哪里使用？原理是？"><a href="#keep-alive平时在哪里使用？原理是？" class="headerlink" title="keep-alive平时在哪里使用？原理是？"></a>keep-alive平时在哪里使用？原理是？</h3><p>使用keep-alive包裹动态组件时，会对组件进行缓存。避免组件得重新创建</p>
+<p>实现原理： </p>
+<p>keep-alive 第一次渲染时，会将其第一个子组件，缓存起来。</p>
+<p>当组件后续再次被激活时，会复用上一次缓存得实例进行渲染。</p>
+<h3 id="mutation和action的区别"><a href="#mutation和action的区别" class="headerlink" title="mutation和action的区别"></a>mutation和action的区别</h3><p>mutation 同步的 唯一修改状态的方式 action 可以合并多个操作，实现获取数据提交给mutation ， mutation中通过同步watch 来监控状态变化， action内部会被包装成promise<br>action主要是复用业务逻辑  mutation主要的作用就是更改状态</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/09/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/" data-id="cl7kp2inj0002h8v257af6gaw" data-title="我的第一篇博客文章" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/09/03/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          我的第一篇博客文章
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/02/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/03/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0-1/">我的第一篇博客文章</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/">我的第一篇博客文章</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
